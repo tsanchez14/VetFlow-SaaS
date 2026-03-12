@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperAdmin | VetFlow SaaS</title>
+    <link rel="stylesheet" href="css/styles.css?v=1.3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .admin-sidebar {
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            width: 260px;
+            position: fixed;
+        }
+
+        .admin-main {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .logo-admin {
+            padding: 2rem;
+            border-bottom: 1px solid #1e293b;
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .nav-link-admin {
+            color: #94a3b8;
+            padding: 1rem 2rem;
+            display: block;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link-admin:hover,
+        .nav-link-admin.active {
+            background: #1e293b;
+            color: white;
+            border-left: 4px solid #38bdf8;
+        }
+
+        .stat-card-admin {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar Admin -->
+        <aside class="admin-sidebar">
+            <div class="logo-admin">
+                <i class="fas fa-shield-alt me-2"></i>VET<span>FLOW</span>
+                <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 400;">PANEL DE CONTROL GLOBAL</div>
+            </div>
+            <nav class="mt-4">
+                <a href="#dashboard" class="nav-link-admin active" data-mod="admin-dashboard">
+                    <i class="fas fa-chart-pie me-2"></i> Dashboard Global
+                </a>
+                <a href="#tenants" class="nav-link-admin" data-mod="admin-tenants">
+                    <i class="fas fa-clinic-medical me-2"></i> Gestión de Clínicas
+                </a>
+                <a href="#subscriptions" class="nav-link-admin" data-mod="admin-subs">
+                    <i class="fas fa-credit-card me-2"></i> Suscripciones
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main w-100">
+            <div id="admin-content">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/admin-app.js"></script>
+</body>
+
+</html>

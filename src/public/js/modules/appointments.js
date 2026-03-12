@@ -259,8 +259,8 @@ const appointments = {
                 </div>
             </div>
             <style>
-                .custom-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-                .custom-modal { background: white; padding: 1.75rem; border-radius: 24px; width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #eee; }
+                .custom-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); padding: 1rem; }
+                .custom-modal { background: white; padding: 1.75rem; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #eee; }
                 .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.8rem; color: #4a5568; }
                 .form-control { width: 100%; padding: 0.7rem 1rem; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.9rem; }
                 .btn-success { background-color: #25d366 !important; color: white !important; border: none !important; transition: all 0.2s; }

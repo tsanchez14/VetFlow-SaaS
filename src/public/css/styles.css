@@ -417,4 +417,69 @@ body {
     .logo-container {
         justify-content: center;
     }
+
+    .search-container {
+        width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 260px;
+        left: -260px;
+        transition: left 0.3s ease;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .logo-text,
+    .nav-item span,
+    .user-info {
+        display: flex;
+    }
+
+    .top-bar {
+        padding: 0 1rem;
+    }
+
+    .search-container {
+        display: none;
+        /* Ocultar búsqueda en móvil para ganar espacio */
+    }
+
+    .table-responsive {
+        border: 0;
+    }
+
+    /* Cards stacking on mobile */
+    .row>* {
+        margin-bottom: 1rem;
+    }
+
+    .module-content {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Toggle Button for Mobile */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+    .mobile-toggle {
+        display: block;
+    }
 }

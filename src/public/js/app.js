@@ -10,6 +10,17 @@ const app = {
     async init() {
         this.container = document.getElementById('module-container');
         this.navItems = document.querySelectorAll('.nav-item');
+        this.sidebar = document.querySelector('.sidebar');
+        this.mobileToggle = document.querySelector('.mobile-toggle');
+
+        // Botón Menú Móvil
+        if (this.mobileToggle) {
+            this.mobileToggle.addEventListener('click', () => {
+                if (this.sidebar) { // Added check for sidebar existence
+                    this.sidebar.classList.toggle('show');
+                }
+            });
+        }
 
         // 1. Inicializar sesión del tenant
         this.tenant = await tenantSession.init(supabase);
@@ -42,13 +53,12 @@ const app = {
     },
 
     initRouter() {
-        window.addEventListener('hashchange', () => this.loadModuleFromHash());
-
-        this.navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const module = item.dataset.module;
-                // Al hacer clic, el hashchange se disparará automáticamente si el link es <a href="#module">
-            });
+        window.addEventListener('hashchange', () => {
+            this.loadModuleFromHash();
+            // Cerrar sidebar en móvil al cambiar de ruta
+            if (this.sidebar && window.innerWidth <= 768) {
+                this.sidebar.classList.remove('show');
+            }
         });
     },
 
@@ -115,4 +125,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export default app;
-export { API_BASE };

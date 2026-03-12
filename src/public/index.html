@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetFlow | Gestión Veterinaria SaaS</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark position-fixed w-100 top-0 z-3 py-2" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#">
+                <i class="fas fa-paw text-success me-2"></i>VET<span>FLOW</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link px-3" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#modulos">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#planes">Precios</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#acerca">Acerca de</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="login.html" class="text-white text-decoration-none me-4 d-none d-lg-block">Ingresar</a>
+                    <a href="registro.html" class="btn btn-success px-4 rounded-pill fw-600">Prueba YA!</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="display-3">El sistema de gestión veterinaria que crece con vos</h1>
+                    <p class="lead mb-5">Simplificá tu día a día, automatizá turnos y controlá tu stock con la
+                        plataforma SaaS más potente para clínicas veterinarias.</p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                        <a href="registro.html" class="btn btn-cta">Probá gratis 14 días</a>
+                        <a href="#planes" class="btn btn-link text-white text-decoration-none pt-3">Ver planes de
+                            precios <i class="fas fa-arrow-down ms-2"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1000"
+                        alt="VetFlow Mascot" class="img-fluid rounded-4 shadow-lg img-hero-custom"
+                        style="border: 10px solid var(--glass-border);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="modules" id="modulos">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold fs-1">Todo lo que tu veterinaria necesita</h2>
+                <p class="text-muted">Módulos integrados para una gestión 360°</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-th-large"></i></div>
+                        <h5>Dashboard</h5>
+                        <p class="small text-muted">Panel central con métricas clave de tu negocio en tiempo real.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h5>Calendario</h5>
+                        <p class="small text-muted">Agenda inteligente para turnos y cirugías sin superposiciones.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-boxes"></i></div>
+                        <h5>Stock</h5>
+                        <p class="small text-muted">Inventario automático con alertas de stock crítico.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-truck-moving"></i></div>
+                        <h5>Proveedores</h5>
+                        <p class="small text-muted">Gestión de contactos y pedidos a tus distribuidores.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <h5>Ventas</h5>
+                        <p class="small text-muted">Punto de venta rápido con múltiples medios de pago.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-receipt"></i></div>
+                        <h5>Costos</h5>
+                        <p class="small text-muted">Seguimiento detallado de gastos fijos y variables.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card">
+                        <div class="module-icon"><i class="fas fa-chart-line"></i></div>
+                        <h5>Reportes</h5>
+                        <p class="small text-muted">Informes detallados para la toma de decisiones estratégicas.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="module-card" style="background-color: var(--primary-blue); color: white;">
+                        <div class="module-icon" style="background: rgba(255,255,255,0.2); color: white;"><i
+                                class="fas fa-plus"></i></div>
+                        <h5>Próximamente</h5>
+                        <p class="small opacity-75">Historias clínicas digitales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="planes">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold fs-1">Planes que se adaptan a vos</h2>
+                <p class="text-muted">Sin sorpresas, sin permanencia</p>
+            </div>
+            <div class="row g-4 justify-content-center align-items-stretch">
+                <!-- Plan Básico -->
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <h3>Plan Básico</h3>
+                        <div class="price">9<small>USD/mes</small></div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Dashboard</li>
+                            <li><i class="fas fa-check"></i> Calendario</li>
+                            <li><i class="fas fa-check"></i> Stock</li>
+                            <li><i class="fas fa-check"></i> Proveedores</li>
+                            <li><i class="fas fa-check"></i> Ventas</li>
+                            <li class="text-muted"><i class="fas fa-times text-muted"></i> Costos</li>
+                            <li class="text-muted"><i class="fas fa-times text-muted"></i> Reportes</li>
+                        </ul>
+                        <a href="registro.html" class="btn btn-outline-success w-100 py-3 rounded-pill">Elegir Plan</a>
+                    </div>
+                </div>
+                <!-- Plan Pro -->
+                <div class="col-lg-4">
+                    <div class="pricing-card recommended">
+                        <div class="badge-recommended">Más elegido</div>
+                        <h3>Plan Pro</h3>
+                        <div class="price">15<small>USD/mes</small></div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> <strong>Todos los módulos</strong></li>
+                            <li><i class="fas fa-check"></i> Gestión de Costos</li>
+                            <li><i class="fas fa-check"></i> Reportes Avanzados</li>
+                            <li><i class="fas fa-check"></i> Soporte Prioritario</li>
+                            <li><i class="fas fa-check"></i> 14 días gratis</li>
+                        </ul>
+                        <a href="registro.html" class="btn btn-success w-100 py-3 rounded-pill"
+                            style="background-color: #1A7A4A;">Probar Gratis</a>
+                    </div>
+                </div>
+                <!-- Plan Anual -->
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <h3>Plan Anual</h3>
+                        <div class="price">149<small>USD/año</small></div>
+                        <p class="text-success fw-bold">Ahorrá un 17% al año</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Todo lo del Plan Pro</li>
+                            <li><i class="fas fa-check"></i> El mejor precio mensual</li>
+                            <li><i class="fas fa-check"></i> Backups diarios</li>
+                        </ul>
+                        <a href="registro.html" class="btn btn-outline-success w-100 py-3 rounded-pill">Elegir Plan</a>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- Acerca de Section -->
+    <section class="about py-5" id="acerca">
+        <div class="container py-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="fw-bold fs-1 mb-4">¿Por qué elegir VetFlow?</h2>
+                    <p class="lead text-muted mb-5">Nacimos con la misión de digitalizar las veterinarias de
+                        Latinoamérica, brindando herramientas de clase mundial a dueños de veterinarias que aman lo
+                        que hacen.</p>
+
+                    <div class="row g-custom-6 justify-content-center mb-5">
+                        <div class="col-md-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="icon-box bg-success-subtle text-success p-3 rounded-circle mb-3">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Seguridad Total</h6>
+                                <p class="small text-muted mb-0">Tus datos están aislados y protegidos con la tecnología
+                                    de Supabase.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="icon-box bg-primary-subtle text-primary p-3 rounded-circle mb-3">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Velocidad</h6>
+                                <p class="small text-muted mb-0">Nuestra arquitectura SaaS asegura que el sistema vuele.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="icon-box bg-danger-subtle text-danger p-3 rounded-circle mb-3">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Soporte Cercano</h6>
+                                <p class="small text-muted mb-0">Estamos para ayudarte en cada paso del camino con
+                                    soporte humano.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="icon-box bg-info-subtle text-info p-3 rounded-circle mb-3">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Acceso Total</h6>
+                                <p class="small text-muted mb-0">Accedé a tu veterinaria desde cualquier dispositivo, en
+                                    cualquier lugar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="footer-logo"><i class="fas fa-paw text-success me-2"></i>VETFLOW</div>
+                    <p class="opacity-75">Potenciando el futuro de las clínicas veterinarias en toda la región.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white fs-4"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 offset-md-1">
+                    <h5 class="mb-4">Producto</h5>
+                    <ul class="footer-links">
+                        <li><a href="#modulos">Funciones</a></li>
+                        <li><a href="#planes">Precios</a></li>
+                        <li><a href="registro.html">Registro</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5 class="mb-4">Legal</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Términos</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="mb-4">Newsletter</h5>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control bg-dark text-white border-0" placeholder="Tu email">
+                        <button class="btn btn-success" type="button"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5 opacity-25">
+            <div class="text-center opacity-50 small">
+                &copy; 2026 VetFlow. Todos los derechos reservados. Hecho con <i class="fas fa-heart text-danger"></i>
+                para tus pacientes.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>

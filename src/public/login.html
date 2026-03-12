@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | VetFlow SaaS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-success {
+            background-color: #1A7A4A;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container login-container">
+        <div class="text-center mb-4">
+            <a href="index.html" class="text-decoration-none text-dark fw-bold fs-3"><i
+                    class="fas fa-paw text-success"></i> VETFLOW</a>
+        </div>
+
+        <div class="card p-4">
+            <h5 class="fw-bold mb-4 text-center">Ingresá a tu clínica</h5>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="tu@email.com" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="******" required>
+                </div>
+                <button type="submit" id="login-btn" class="btn btn-success w-100 mb-3">Ingresar</button>
+                <div class="text-center">
+                    <a href="#" class="text-muted small">¿Olvidaste tu contraseña?</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <span class="text-muted">¿No tenés cuenta?</span> <a href="registro.html"
+                class="text-success fw-bold text-decoration-none">Probá gratis</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+        import { tenantSession } from './js/tenant-session.js'
+
+        const SUPABASE_URL = 'https://wjqhfpgkbpqyoudzedyb.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqcWhmcGdrYnBxeW91ZHplZHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjY5OTIsImV4cCI6MjA4ODc0Mjk5Mn0.MTljd7tM-9SjdSWUTzDSH2sYcww0SdCV6qnDdOElfe0'
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Ingresando...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                // Inicializar sesión multitenant
+                const tenant = await tenantSession.init(supabase);
+                if (!tenant) throw new Error('No se pudo cargar la información de la veterinaria.');
+
+                // Redirección inteligente: si falta onboarding, ir a onboarding.html
+                if (tenant.config?.onboardingDone === false || !tenant.schemaName) {
+                    window.location.href = 'onboarding.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                alert(error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Ingresar';
+            }
+        });
+    </script>
+</body>
+
+</html>

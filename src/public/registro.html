@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | VetFlow SaaS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .reg-container {
+            max-width: 500px;
+            margin: 50px auto;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .step.active {
+            background: #1A7A4A;
+        }
+
+        .btn-success {
+            background-color: #1A7A4A;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container reg-container">
+        <div class="text-center mb-4">
+            <a href="index.html" class="text-decoration-none text-dark fw-bold fs-3"><i
+                    class="fas fa-paw text-success"></i> VETFLOW</a>
+            <p class="text-muted">Empezá tus 14 días de prueba gratis</p>
+        </div>
+
+        <div class="card p-4">
+            <div class="step-indicator">
+                <div class="step active" id="step1-dot">1</div>
+                <div class="step" id="step2-dot">2</div>
+            </div>
+
+            <form id="registration-form">
+                <!-- Paso 1: Datos de la Clínica -->
+                <div id="step1">
+                    <h5 class="fw-bold mb-3">Datos de tu Veterinaria</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Clínica</label>
+                        <input type="text" id="vet-name" class="form-control" placeholder="Ej: Veterinaria El Gateado"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ciudad</label>
+                        <input type="text" id="vet-city" class="form-control" placeholder="Ej: Buenos Aires" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Provincia</label>
+                        <input type="text" id="vet-state" class="form-control" placeholder="Ej: Buenos Aires" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" id="vet-phone" class="form-control" placeholder="Ej: +54 9 11..." required>
+                    </div>
+                    <button type="button" class="btn btn-success w-100" id="btn-to-step2">Siguiente <i
+                            class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+
+                <!-- Paso 2: Cuenta de Acceso -->
+                <div id="step2" class="hidden">
+                    <h5 class="fw-bold mb-3">Tu cuenta de acceso</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Tu Nombre</label>
+                        <input type="text" id="owner-name" class="form-control" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" id="password" class="form-control" placeholder="Mínimo 6 caracteres"
+                            required minlength="6">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary w-50"
+                            onclick="changeStep(1)">Atrás</button>
+                        <button type="submit" id="submit-btn" class="btn btn-success w-50">Crear Cuenta</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <span class="text-muted">¿Ya tenés cuenta?</span> <a href="login.html"
+                class="text-success fw-bold text-decoration-none">Iniciá sesión</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/registro.js" type="module"></script>
+    <script>
+        // Definimos una función global mínima para que los botones de "Atrás" sigan funcionando
+        // Pero la lógica principal de validación estará en registro.js
+        window.changeStep = function (num) {
+            document.getElementById('step1').classList.toggle('hidden', num === 2);
+            document.getElementById('step2').classList.toggle('hidden', num === 1);
+            document.getElementById('step2-dot').classList.toggle('active', num === 2);
+        };
+    </script>
+</body>
+
+</html>

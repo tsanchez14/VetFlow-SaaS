@@ -123,48 +123,48 @@ const plans = {
         const originalText = btn.innerHTML;
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Procesando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Redirigiendo a Mercado Pago...';
 
         try {
-            // SIMULACIÓN DE MERCADO PAGO
-            // En una app real, aquí llamaríamos a una Edge Function para crear la preferencia
-            // y abriríamos el Checkout Pro.
+            // Precios definidos acorde al renderPlanCard
+            const precioMap = {
+                'PRO': 4500,
+                'ANUAL': 45000
+            };
+            const price = precioMap[planName] || 4500;
+            const title = `VetFlow - Plan ${planName}`;
 
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simular latencia de red
+            // Llamar al backend para crear la preferencia real
+            const response = await fetch('/api/create_preference', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    price: price
+                })
+            });
 
-            const confirmacion = confirm(`Estás por suscribirte al plan ${planName}.\n\nPara esta demo, simularemos un pago exitoso.\n¿Deseas continuar?`);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || 'Error al conectar con Mercado Pago');
+            }
 
-            if (confirmacion) {
-                // 1. Actualizar el tenant en la base de datos (public schema)
-                const nuevoEstado = 'activo';
-                const { error } = await supabase
-                    .from('tenants')
-                    .update({
-                        plan: planName.toLowerCase(),
-                        estado: nuevoEstado,
-                        trial_hasta: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString() // Extender 1 año
-                    })
-                    .eq('id', tenant.id);
+            const data = await response.json();
 
-                if (error) throw error;
+            // Guardaremos el intento en una variable local por si luego queremos revisar el webhook
+            console.log("Preferencia creada con ID:", data.id);
 
-                // 2. Registrar la suscripción
-                await supabase.from('suscripciones').insert([{
-                    tenant_id: tenant.id,
-                    plan_id: planName.toLowerCase(),
-                    estado: 'auto_recurring',
-                    fecha_inicio: new Date().toISOString()
-                }]);
-
-                // 3. Actualizar la sesión local
-                await tenantSession.init(supabase);
-
-                alert('¡Suscripción exitosa! Tu cuenta ha sido actualizada al plan ' + planName);
-                this.render(document.getElementById('module-container'));
+            // Redirigir al inicio del checkout de prueba
+            if (data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                throw new Error("No se recibió la URL de pago.");
             }
         } catch (err) {
-            alert('Error al procesar la suscripción: ' + err.message);
-        } finally {
+            console.error(err);
+            alert('Error al inicializar el pago: ' + err.message);
             btn.disabled = false;
             btn.innerHTML = originalText;
         }

@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const crypto = require('crypto'); // Necesario para validar el webhook
+const { MercadoPagoConfig, Preference } = require('mercadopago'); // Import MP SDK
 const supabase = require('./supabase');
 
 const app = express();
@@ -478,6 +479,50 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
     } catch (error) {
         console.error('[MP Webhook] Error:', error.message);
         res.status(200).send('OK'); // MP recomienda siempre devolver 200 aunque falle el proceso interno
+    }
+});
+
+// Mercado Pago - Crear Preferencia de Pago
+app.post('/api/create_preference', async (req, res) => {
+    try {
+        const { title, price } = req.body;
+
+        // Validar que se reciba el token
+        const client_id = process.env.MP_ACCESS_TOKEN;
+        if (!client_id) {
+            return res.status(500).json({ error: "No se configuró el MP_ACCESS_TOKEN en el servidor." });
+        }
+
+        // Configurar el SDK con el Access Token del entorno
+        const client = new MercadoPagoConfig({ accessToken: client_id, options: { timeout: 5000 } });
+        const preference = new Preference(client);
+
+        // Crear el objeto de preferencia que MP requiere
+        const result = await preference.create({
+            body: {
+                items: [
+                    {
+                        title: title || 'Suscripción VetFlow',
+                        quantity: 1,
+                        unit_price: Number(price) || 4500,
+                        currency_id: 'ARS'
+                    }
+                ],
+                // back_urls y auto_return (Opcional)
+                back_urls: {
+                    success: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html',
+                    failure: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html',
+                    pending: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html'
+                },
+                auto_return: "approved",
+            }
+        });
+
+        // Retornar el punto de inicio para que el frontend redirija
+        res.json({ id: result.id, init_point: result.sandbox_init_point }); // sandbox_init_point para pruebas
+    } catch (error) {
+        console.error("Error creando preferencia MP:", error);
+        res.status(500).json({ error: error.message });
     }
 });
 

@@ -1,9 +1,9 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const costs = {
     async render(container) {
-        console.log('Rendering Costs Module (Multitenant)');
+        console.log('Rendering Costs Module');
         container.innerHTML = `
             <div class="module-wrapper px-4">
                 <div class="module-header d-flex justify-content-between align-items-center mb-1 py-1">
@@ -160,7 +160,7 @@ const costs = {
         const lastDay = new Date(year, month, 0, 23, 59, 59).toISOString();
 
         try {
-            const { data, error } = await supabase.schema(schema)
+            const { data, error } = await supabase
                 .from('costs')
                 .select('*')
                 .gte('date', firstDay)
@@ -215,11 +215,12 @@ const costs = {
     async editCost(id) {
         const schema = tenantSession.getSchema();
         try {
-            const { data: cost, error } = await supabase.schema(schema)
+            const { data: cost, error } = await supabase
                 .from('costs')
                 .select('*')
                 .eq('id', id)
                 .single();
+
 
             if (error) throw error;
             if (cost) {
@@ -241,7 +242,7 @@ const costs = {
         if (!confirm('¿Estás seguro de eliminar este gasto?')) return;
         const schema = tenantSession.getSchema();
         try {
-            const { error } = await supabase.schema(schema)
+            const { error } = await supabase
                 .from('costs')
                 .delete()
                 .eq('id', id);
@@ -265,9 +266,10 @@ const costs = {
         };
 
         try {
+            costData.tenant_id = tenantSession.getTenant()?.id; // Add tenant_id
             const query = this.editingId
-                ? supabase.schema(schema).from('costs').update(costData).eq('id', this.editingId)
-                : supabase.schema(schema).from('costs').insert([costData]);
+                ? supabase.from('costs').update(costData).eq('id', this.editingId)
+                : supabase.from('costs').insert([costData]);
 
             const { error } = await query;
             if (error) throw error;

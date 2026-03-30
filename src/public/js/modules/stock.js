@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const stock = {
@@ -93,7 +93,7 @@ const stock = {
         const schema = tenantSession.getSchema();
 
         try {
-            const { data: products, error } = await supabase.schema(schema)
+            const { data: products, error } = await supabase
                 .from('products')
                 .select('*')
                 .order('name', { ascending: true });
@@ -101,7 +101,7 @@ const stock = {
             if (error) throw error;
 
             document.getElementById('total-products').textContent = products.length;
-            const lowStock = products.filter(p => p.stock <= p.min_stock);
+            const lowStock = products.filter(p => Number(p.stock) <= Number(p.min_stock));
             document.getElementById('low-stock-count').textContent = lowStock.length;
 
             if (products.length === 0) {
@@ -109,13 +109,13 @@ const stock = {
             } else {
                 list.innerHTML = products.map(p => `
                     <tr>
-                        <td class="ps-4"><strong>${p.name}</strong><br><small class="text-muted">${p.unit || ''}</small></td>
+                        <td class="ps-4"><strong>${p.name}</strong></td>
                         <td>${p.category || 'Gral'}</td>
                         <td>${p.stock}</td>
                         <td class="fw-bold text-dark">$${p.sell_price.toLocaleString()}</td>
                         <td>
-                            <span class="badge-stock ${p.stock <= p.min_stock ? 'badge-low' : 'badge-ok'}">
-                                ${p.stock <= p.min_stock ? 'Stock Bajo' : 'Normal'}
+                            <span class="badge-stock ${Number(p.stock) <= Number(p.min_stock) ? 'badge-low' : 'badge-ok'}">
+                                ${Number(p.stock) <= Number(p.min_stock) ? 'Stock Bajo' : 'Normal'}
                             </span>
                         </td>
                         <td class="text-end pe-4">
@@ -152,7 +152,7 @@ const stock = {
     async editProduct(id) {
         const schema = tenantSession.getSchema();
         try {
-            const { data: product, error } = await supabase.schema(schema)
+            const { data: product, error } = await supabase
                 .from('products')
                 .select('*')
                 .eq('id', id)
@@ -168,7 +168,7 @@ const stock = {
         if (!confirm('¿Estás seguro de eliminar este producto?')) return;
         const schema = tenantSession.getSchema();
         try {
-            const { error } = await supabase.schema(schema)
+            const { error } = await supabase
                 .from('products')
                 .delete()
                 .eq('id', id);
@@ -186,7 +186,7 @@ const stock = {
         const schema = tenantSession.getSchema();
 
         try {
-            const { data: suppliers } = await supabase.schema(schema)
+            const { data: suppliers } = await supabase
                 .from('suppliers')
                 .select('id, name')
                 .order('name', { ascending: true });
@@ -200,15 +200,9 @@ const stock = {
                                 <label>Nombre del Producto*</label>
                                 <input type="text" name="name" class="form-control" placeholder="Ej: Amoxicilina 500mg" value="${productToEdit ? productToEdit.name : ''}" required>
                             </div>
-                            <div class="row g-2 mb-3">
-                                <div class="col-7">
-                                    <label>Categoría</label>
-                                    <input type="text" name="category" class="form-control" placeholder="Ej: Medicamento" value="${productToEdit ? (productToEdit.category || '') : ''}">
-                                </div>
-                                <div class="col-5">
-                                    <label>Unidad</label>
-                                    <input type="text" name="unit" class="form-control" placeholder="Ej: ml, kg" value="${productToEdit ? (productToEdit.unit || '') : ''}">
-                                </div>
+                            <div class="form-group mb-3">
+                                <label>Categoría</label>
+                                <input type="text" name="category" class="form-control" placeholder="Ej: Medicamento" value="${productToEdit ? (productToEdit.category || '') : ''}">
                             </div>
                             <div class="row g-2 mb-3">
                                 <div class="col">
@@ -259,11 +253,18 @@ const stock = {
                 const data = Object.fromEntries(formData.entries());
 
                 try {
+                    // Asegurar tipos numéricos para comparaciones correctas
+                    data.stock = Number(data.stock || 0);
+                    data.min_stock = Number(data.min_stock || 0);
+                    data.cost_price = Number(data.cost_price || 0);
+                    data.sell_price = Number(data.sell_price || 0);
+
                     if (this.editingId) {
-                        const { error } = await supabase.schema(schema).from('products').update(data).eq('id', this.editingId);
+                        const { error } = await supabase.from('products').update(data).eq('id', this.editingId);
                         if (error) throw error;
                     } else {
-                        const { error } = await supabase.schema(schema).from('products').insert([data]);
+                        data.tenant_id = tenantSession.getTenant()?.id;
+                        const { error } = await supabase.from('products').insert([data]);
                         if (error) throw error;
                     }
                     container.remove();

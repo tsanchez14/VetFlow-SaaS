@@ -16,6 +16,22 @@ app.use(bodyParser.json());
 
 // --- API Routes ---
 
+// Reset Password (Admin)
+app.post('/api/reset_password', async (req, res) => {
+    const { email, newPassword } = req.body;
+    try {
+        const { data, error } = await supabase.auth.admin.updateUserById(
+            (await supabase.auth.admin.listUsers()).data.users.find(u => u.email === email).id,
+            { password: newPassword }
+        );
+        if (error) throw error;
+        res.json({ success: true, message: `Contraseña de ${email} actualizada correctamente.` });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 // Appointments
 app.get('/api/appointments', async (req, res) => {
     const { date } = req.query;
@@ -446,85 +462,6 @@ const processRecurringCosts = async () => {
     }
 };
 
-// Mercado Pago Webhook
-app.post('/api/webhooks/mercadopago', async (req, res) => {
-    const signature = req.headers['x-signature'];
-    const requestId = req.headers['x-request-id'];
-    const secret = process.env.MP_WEBHOOK_SECRET;
-
-    if (!signature || !secret) {
-        console.warn(`[MP Webhook] Falta firma o secreto. ID: ${requestId}`);
-        // En producción: return res.status(400).send('Unauthorized');
-    }
-
-    try {
-        // Validación de Firma HMAC (Opcional pero recomendado para Prod)
-        // const [tsPart, v1Part] = signature.split(',');
-        // const ts = tsPart.split('=')[1];
-        // const v1 = v1Part.split('=')[1];
-        // const manifest = `id:${req.body.data.id};request-id:${requestId};ts:${ts};`;
-        // const hmac = crypto.createHmac('sha256', secret).update(manifest).digest('hex');
-
-        // if (hmac !== v1) throw new Error('Firma inválida');
-
-        const { type, data } = req.body;
-        console.log(`[MP Webhook] Evento recibido: ${type} - ID: ${data?.id}`);
-
-        if (type === 'payment' || type === 'subscription_preapproval') {
-            // Aquí iría la lógica para consultar la API de MP y actualizar el tenant
-            // similar a lo que simulamos en el frontend pero con privilegios de servidor.
-        }
-
-        res.status(200).send('OK');
-    } catch (error) {
-        console.error('[MP Webhook] Error:', error.message);
-        res.status(200).send('OK'); // MP recomienda siempre devolver 200 aunque falle el proceso interno
-    }
-});
-
-// Mercado Pago - Crear Preferencia de Pago
-app.post('/api/create_preference', async (req, res) => {
-    try {
-        const { title, price } = req.body;
-
-        // Validar que se reciba el token
-        const client_id = process.env.MP_ACCESS_TOKEN;
-        if (!client_id) {
-            return res.status(500).json({ error: "No se configuró el MP_ACCESS_TOKEN en el servidor." });
-        }
-
-        // Configurar el SDK con el Access Token del entorno
-        const client = new MercadoPagoConfig({ accessToken: client_id, options: { timeout: 5000 } });
-        const preference = new Preference(client);
-
-        // Crear el objeto de preferencia que MP requiere
-        const result = await preference.create({
-            body: {
-                items: [
-                    {
-                        title: title || 'Suscripción VetFlow',
-                        quantity: 1,
-                        unit_price: Number(price) || 4500,
-                        currency_id: 'ARS'
-                    }
-                ],
-                // back_urls y auto_return (Opcional)
-                back_urls: {
-                    success: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html',
-                    failure: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html',
-                    pending: process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/dashboard.html` : 'http://localhost:3000/dashboard.html'
-                },
-                auto_return: "approved",
-            }
-        });
-
-        // Retornar el punto de inicio para que el frontend redirija
-        res.json({ id: result.id, init_point: result.sandbox_init_point }); // sandbox_init_point para pruebas
-    } catch (error) {
-        console.error("Error creando preferencia MP:", error);
-        res.status(500).json({ error: error.message });
-    }
-});
 
 // Run cleanup and recurring costs check on server start
 setTimeout(() => {

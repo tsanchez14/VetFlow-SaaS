@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const reports = {
@@ -18,7 +18,6 @@ const reports = {
                 <div class="col-lg-12">
                     <div class="card shadow-sm border-0 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="card-title fw-bold mb-4">Resumen Financiero Mensual</h5>
                             <div class="row g-4 mb-4">
                                 <div class="col-md-3">
                                     <div class="p-3 bg-light rounded text-center">
@@ -118,8 +117,8 @@ const reports = {
         try {
             // Fetch all data for the tenant
             const [salesRes, costsRes] = await Promise.all([
-                supabase.schema(schema).from('sales').select('*'),
-                supabase.schema(schema).from('costs').select('*')
+                supabase.from('sales').select('*'),
+                supabase.from('costs').select('*')
             ]);
 
             if (salesRes.error) throw salesRes.error;

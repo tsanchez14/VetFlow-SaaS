@@ -1,6 +1,4 @@
-import { supabase } from './supabaseClient.js';
 import { tenantSession } from './tenant-session.js';
-import plans from './modules/plans.js'; // Importar el nuevo módulo
 
 const app = {
     modules: {},
@@ -16,17 +14,23 @@ const app = {
         // Botón Menú Móvil
         if (this.mobileToggle) {
             this.mobileToggle.addEventListener('click', () => {
-                if (this.sidebar) { // Added check for sidebar existence
+                if (this.sidebar) {
                     this.sidebar.classList.toggle('show');
                 }
             });
         }
 
         // 1. Inicializar sesión del tenant
-        this.tenant = await tenantSession.init(supabase);
+        try {
+            this.tenant = await tenantSession.init();
 
-        if (!this.tenant) {
-            console.error('No se pudo inicializar la sesión del tenant. Redirigiendo al login...');
+            if (!this.tenant) {
+                console.warn('No se pudo inicializar la sesión. Redirigiendo al login...');
+                window.location.href = 'login.html';
+                return;
+            }
+        } catch (err) {
+            console.error('Excepción en App Init:', err);
             window.location.href = 'login.html';
             return;
         }
@@ -37,7 +41,7 @@ const app = {
         this.initRouter();
         this.loadModuleFromHash();
 
-        console.log('App initialized for tenant:', this.tenant.nombre);
+        console.log('App initialized (Standalone Demo)');
     },
 
     updateTenantUI() {
@@ -64,13 +68,6 @@ const app = {
 
     async loadModuleFromHash() {
         const hash = window.location.hash.substring(1) || 'dashboard';
-
-        // Verificar permisos antes de cargar
-        if (!tenantSession.checkPermisoModulo(hash)) {
-            alert('Tu plan actual no permite el acceso a este módulo.');
-            window.location.hash = 'dashboard';
-            return;
-        }
 
         this.setActiveNavItem(hash);
 

@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const appointments = {
@@ -141,7 +141,7 @@ const appointments = {
         const schema = tenantSession.getSchema();
 
         try {
-            const { data, error } = await supabase.schema(schema)
+            const { data, error } = await supabase
                 .from('appointments')
                 .select('*')
                 .eq('date', dateIso)
@@ -197,7 +197,7 @@ const appointments = {
         if (!confirm('¿Seguro que desea eliminar (cancelar) este turno?')) return;
         const schema = tenantSession.getSchema();
         try {
-            const { error } = await supabase.schema(schema)
+            const { error } = await supabase
                 .from('appointments')
                 .update({ status: 'cancelled' })
                 .eq('id', id);
@@ -219,14 +219,13 @@ const appointments = {
         container.innerHTML = `
             <div class="custom-modal-backdrop">
                 <div class="custom-modal">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="mb-4 text-start">
                         <h3 class="mb-0 fw-bold">Agendar Turno</h3>
-                        <span class="badge bg-light text-muted" style="font-size: 0.6rem;">v1.4</span>
                     </div>
                     <form id="appointment-form" autocomplete="off">
                         <div class="form-group mb-3">
                             <label>Nombre de la Mascota / Dueño*</label>
-                            <input type="text" id="appt-search" class="form-control" placeholder="Buscar por mascota o dueño..." autocomplete="off" required>
+                            <input type="text" id="appt-search" name="display_name" class="form-control" placeholder="Nombre de mascota o dueño..." autocomplete="off" required>
                         </div>
                         <div class="form-group mb-3">
                             <label>Teléfono (para WhatsApp)*</label>
@@ -279,6 +278,7 @@ const appointments = {
             const schema = tenantSession.getSchema();
             try {
                 const payload = {
+                    tenant_id: tenantSession.getTenant()?.id, // Agregar tenant_id
                     display_name: data.display_name,
                     phone: data.phone,
                     date: data.date,
@@ -287,7 +287,7 @@ const appointments = {
                     status: 'pending'
                 };
 
-                const { error } = await supabase.schema(schema)
+                const { error } = await supabase
                     .from('appointments')
                     .insert([payload]);
 

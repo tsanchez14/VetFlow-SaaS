@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const suppliers = {
@@ -57,7 +57,7 @@ const suppliers = {
         const list = document.getElementById('suppliers-list');
         const schema = tenantSession.getSchema();
         try {
-            const { data, error } = await supabase.schema(schema)
+            const { data, error } = await supabase
                 .from('suppliers')
                 .select('*')
                 .order('name', { ascending: true });
@@ -112,7 +112,7 @@ const suppliers = {
     async editSupplier(id) {
         const schema = tenantSession.getSchema();
         try {
-            const { data: supplier, error } = await supabase.schema(schema)
+            const { data: supplier, error } = await supabase
                 .from('suppliers')
                 .select('*')
                 .eq('id', id)
@@ -130,7 +130,7 @@ const suppliers = {
         if (!confirm('¿Estás seguro de eliminar este proveedor?')) return;
         const schema = tenantSession.getSchema();
         try {
-            const { error } = await supabase.schema(schema)
+            const { error } = await supabase
                 .from('suppliers')
                 .delete()
                 .eq('id', id);
@@ -201,9 +201,12 @@ const suppliers = {
 
             const schema = tenantSession.getSchema();
             try {
+                if (!this.editingId) {
+                    data.tenant_id = tenantSession.getTenant()?.id; // Add tenant_id
+                }
                 const query = this.editingId
-                    ? supabase.schema(schema).from('suppliers').update(data).eq('id', this.editingId)
-                    : supabase.schema(schema).from('suppliers').insert([data]);
+                    ? supabase.from('suppliers').update(data).eq('id', this.editingId)
+                    : supabase.from('suppliers').insert([data]);
 
                 const { error } = await query;
                 if (error) throw error;

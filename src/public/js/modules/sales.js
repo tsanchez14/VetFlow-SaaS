@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const sales = {
@@ -14,7 +14,7 @@ const sales = {
             <div class="module-header mb-1">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h1 class="h3 font-weight-bold mb-1">Nueva Venta (Multitenant)</h1>
+                        <h1 class="h3 font-weight-bold mb-1">Nueva Venta</h1>
                         <p class="text-muted">Gestión de cobros y facturación</p>
                     </div>
                 </div>
@@ -152,7 +152,7 @@ const sales = {
 
         const schema = tenantSession.getSchema();
         try {
-            const { data: sales, error } = await supabase.schema(schema)
+            const { data: sales, error } = await supabase
                 .from('sales')
                 .select('*')
                 .order('date', { ascending: false })
@@ -204,10 +204,11 @@ const sales = {
     async loadInitialData() {
         const schema = tenantSession.getSchema();
         try {
-            const { data: products, error } = await supabase.schema(schema)
+            const { data: products, error } = await supabase
                 .from('products')
                 .select('*')
                 .order('name', { ascending: true });
+
 
             if (error) throw error;
             this.products = products;
@@ -361,7 +362,8 @@ const sales = {
 
         try {
             // 1. Insert Sale record
-            const { data: sale, error: sError } = await supabase.schema(schema)
+            saleData.tenant_id = tenantSession.getTenant()?.id; // Add tenant_id
+            const { data: sale, error: sError } = await supabase
                 .from('sales')
                 .insert([saleData])
                 .select()
@@ -373,7 +375,7 @@ const sales = {
             for (const item of this.cart) {
                 const prod = this.products.find(p => p.id === item.id);
                 if (prod) {
-                    await supabase.schema(schema).from('products').update({ stock: prod.stock - item.quantity }).eq('id', item.id);
+                    await supabase.from('products').update({ stock: prod.stock - item.quantity }).eq('id', item.id);
                 }
             }
 
@@ -403,7 +405,7 @@ const sales = {
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Cargando...';
 
         try {
-            const { data: salesData, error } = await supabase.schema(schema)
+            const { data: salesData, error } = await supabase
                 .from('sales')
                 .select('*')
                 .gte('date', firstDay)

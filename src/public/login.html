@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | VetFlow SaaS</title>
+    <title>Login | VetFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -55,57 +55,82 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Contraseña</label>
-                    <input type="password" id="password" class="form-control" placeholder="******" required>
+                    <div class="input-group">
+                        <input type="password" id="password" class="form-control" placeholder="******" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" id="login-btn" class="btn btn-success w-100 mb-3">Ingresar</button>
+                <div class="text-center mb-3">
+                    <button type="button" id="demo-btn" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-play-circle me-2"></i> Acceso de Prueba (Demo)
+                    </button>
+                </div>
                 <div class="text-center">
                     <a href="#" class="text-muted small">¿Olvidaste tu contraseña?</a>
                 </div>
             </form>
         </div>
-
-        <div class="text-center mt-4">
-            <span class="text-muted">¿No tenés cuenta?</span> <a href="registro.html"
-                class="text-success fw-bold text-decoration-none">Probá gratis</a>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-        import { tenantSession } from './js/tenant-session.js'
+        // Check for Demo flag
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('demo') === 'true') {
+            document.getElementById('email').value = 'demo@vetflow.com';
+            document.getElementById('password').value = 'demo123456';
 
-        const SUPABASE_URL = 'https://wjqhfpgkbpqyoudzedyb.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqcWhmcGdrYnBxeW91ZHplZHliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjY5OTIsImV4cCI6MjA4ODc0Mjk5Mn0.MTljd7tM-9SjdSWUTzDSH2sYcww0SdCV6qnDdOElfe0'
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            // Auto-submit after a tiny delay for visual feedback
+            setTimeout(() => {
+                document.getElementById('login-form').dispatchEvent(new Event('submit'));
+            }, 500);
+        }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        document.getElementById('demo-btn').onclick = () => {
+            document.getElementById('email').value = 'demo@vetflow.com';
+            document.getElementById('password').value = 'demo123456';
+            document.getElementById('login-form').dispatchEvent(new Event('submit'));
+        };
+
+        document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
-            const btn = document.getElementById('login-btn');
+            const btn = e.target.querySelector('button[type="submit"]');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Ingresando...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Iniciando Sesión...';
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            // Simular login exitoso para la demo
+            const tenantData = {
+                id: 1,
+                nombre: 'VetFlow',
+                slug: 'vetflow',
+                plan: 'pro',
+                estado: 'activo',
+                schemaName: 'public',
+                config: { welcome_message: 'Bienvenido al panel de control' }
+            };
 
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
+            sessionStorage.setItem('vetflow_tenant_data', JSON.stringify(tenantData));
 
-                // Inicializar sesión multitenant
-                const tenant = await tenantSession.init(supabase);
-                if (!tenant) throw new Error('No se pudo cargar la información de la veterinaria.');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        };
 
-                // Redirección inteligente: si falta onboarding, ir a onboarding.html
-                if (tenant.config?.onboardingDone === false || !tenant.schemaName) {
-                    window.location.href = 'onboarding.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-            } catch (error) {
-                alert(error.message);
-                btn.disabled = false;
-                btn.innerHTML = 'Ingresar';
+        // Toggle Password Visibility
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         });
     </script>

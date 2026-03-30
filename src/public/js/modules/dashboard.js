@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { db as supabase } from '../utils/mock-db.js';
 import { tenantSession } from '../tenant-session.js';
 
 const dashboard = {
@@ -16,6 +16,12 @@ const dashboard = {
         this.renderRemaining(container, stats);
     },
 
+    /**
+     * Renderiza los componentes principales del dashboard: tarjetas de estadísticas,
+     * lista de turnos de hoy y alertas de stock bajo.
+     * @param {HTMLElement} container - El contenedor donde se inyectará el HTML.
+     * @param {Object} stats - Objeto con los datos estadísticos obtenidos de fetchStats.
+     */
     renderRemaining(container, stats) {
         container.innerHTML = `
             <div class="dashboard-header mb-1">
@@ -148,9 +154,9 @@ const dashboard = {
 
             // Queries directas a Supabase usando el schema del tenant
             const [aptQuery, prodQuery, salesQuery] = await Promise.all([
-                supabase.schema(schema).from('appointments').select('*').eq('date', todayStr),
-                supabase.schema(schema).from('products').select('*'),
-                supabase.schema(schema).from('sales').select('*').gte('date', `${todayStr}T00:00:00`).lte('date', `${todayStr}T23:59:59`)
+                supabase.from('appointments').select('*').eq('date', todayStr),
+                supabase.from('products').select('*'),
+                supabase.from('sales').select('*').gte('date', `${todayStr}T00:00:00`).lte('date', `${todayStr}T23:59:59`)
             ]);
 
             const todayAppointments = aptQuery.data || [];
